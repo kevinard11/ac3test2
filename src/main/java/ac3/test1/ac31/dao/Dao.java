@@ -10,7 +10,7 @@ public interface Dao {
     @Insert(save)
     void save(@Param("name") String name);
 
-    final String get = "SELECT id from test1 where name = #{name}";
+    final String get = "SELECT id from users where name = #{name}";
     @Select(get)
     String check(@Param("name") String name);
 }
