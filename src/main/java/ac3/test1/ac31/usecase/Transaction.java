@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 public class Transaction {
 
     public boolean makeTrue(){
-        System.out.println("Test");
+        System.out.println("Travis CI/CD test");
         return true;
     }
 }
