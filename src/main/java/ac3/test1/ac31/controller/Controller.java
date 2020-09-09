@@ -30,7 +30,8 @@ public class Controller {
 
     @GetMapping(value="/{name}")
     public ResponseEntity<?> welcome(String name){
-        String id = dao.check("name");
+        System.out.println(name);
+        String id = dao.check(name);
         return new ResponseEntity<>("Welcome to ac3test3 project. For testing only"+ id, HttpStatus.OK);
     }
 }
