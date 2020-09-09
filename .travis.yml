@@ -1,33 +1,47 @@
-  
+#
+#language: java
+#
+#jdk:
+##  - openjdk11
+##  - openjdk10
+##  - openjdk9
+#  - openjdk8
+#
+##sudo: required
+#
+#services:
+#  - docker
+#
+#before_install:
+#  - mvn clean
+#  - echo "$DOCKER_PASSWORD" | docker login  -u "$DOCKER_USERNAME" --password-stdin
+#  - docker pull openjdk:8-jdk-alpine
+##install: true # This runs the "true" command in the install phase; thus skipping install
+#script:
+#  #We avoid this error :" the job exceeded the maximum log length and has been terminated "
+#    - echo -e '<?xml version="1.0" encoding="UTF-8"?>\n<settings xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.1.0 http://maven.apache.org/xsd/settings-1.1.0.xsd" xmlns="http://maven.apache.org/SETTINGS/1.1.0"\n    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">\n  <mirrors>\n    <mirror>\n      <id>mvnsearch-unavailable</id>\n      <name>mvnsearch-unavailable</name>\n      <mirrorOf>mvnsearch</mirrorOf>\n      <url>http://repo1.maven.org/maven2</url>\n    </mirror>\n  </mirrors>\n  <profiles>\n    <profile>\n      <id>no-mvnsearch</id>\n      <repositories>\n        <repository>\n          <id>mvnsearch</id>\n          <url>http://www.mvnsearch.org/maven2</url>\n          <releases>\n            <enabled>true</enabled>\n          </releases>\n          <snapshots>\n            <enabled>true</enabled>\n          </snapshots>\n        </repository>\n      </repositories>\n    </profile>\n  </profiles>\n  <activeProfiles>\n    <activeProfile>no-mvnsearch</activeProfile>\n  </activeProfiles>\n</settings>' > $HOME/.m2/settings.xml
+#    - cat $HOME/.m2/settings.xml
+#    #deploying the app on Docker & Heroku
+#    - mvn deploy
+##  - |
+##    if [[ "$TRAVIS_BRANCH" == master && "$TRAVIS_PULL_REQUEST" == false && "$TRAVIS_JDK_VERSION" == "openjdk8" ]]
+##    then mvn deploy -s travis-settings.xml
+##    else mvn verify
+##    fi
+##cache:
+##  directories:
+##    - $HOME/.m2/repository/
+
 language: java
-
 jdk:
-#  - openjdk11
-#  - openjdk10
-#  - openjdk9
-  - openjdk8
-
-#sudo: required
-
+  - openjdk11
 services:
   - docker
 
 before_install:
-  - mvn clean
-  - echo "$DOCKER_PASSWORD" | docker login  -u "$DOCKER_USERNAME" --password-stdin
-  - docker pull openjdk:8-jdk-alpine
-#install: true # This runs the "true" command in the install phase; thus skipping install
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+  - docker pull openjdk:11-jre-slim-sid
+
 script:
-  #We avoid this error :" the job exceeded the maximum log length and has been terminated "
-    - echo -e '<?xml version="1.0" encoding="UTF-8"?>\n<settings xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.1.0 http://maven.apache.org/xsd/settings-1.1.0.xsd" xmlns="http://maven.apache.org/SETTINGS/1.1.0"\n    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">\n  <mirrors>\n    <mirror>\n      <id>mvnsearch-unavailable</id>\n      <name>mvnsearch-unavailable</name>\n      <mirrorOf>mvnsearch</mirrorOf>\n      <url>http://repo1.maven.org/maven2</url>\n    </mirror>\n  </mirrors>\n  <profiles>\n    <profile>\n      <id>no-mvnsearch</id>\n      <repositories>\n        <repository>\n          <id>mvnsearch</id>\n          <url>http://www.mvnsearch.org/maven2</url>\n          <releases>\n            <enabled>true</enabled>\n          </releases>\n          <snapshots>\n            <enabled>true</enabled>\n          </snapshots>\n        </repository>\n      </repositories>\n    </profile>\n  </profiles>\n  <activeProfiles>\n    <activeProfile>no-mvnsearch</activeProfile>\n  </activeProfiles>\n</settings>' > $HOME/.m2/settings.xml
-    - cat $HOME/.m2/settings.xml
-    #deploying the app on Docker & Heroku
-    - mvn deploy
-#  - |
-#    if [[ "$TRAVIS_BRANCH" == master && "$TRAVIS_PULL_REQUEST" == false && "$TRAVIS_JDK_VERSION" == "openjdk8" ]]
-#    then mvn deploy -s travis-settings.xml
-#    else mvn verify
-#    fi
-#cache:
-#  directories:
-#    - $HOME/.m2/repository/
+  - ./mvnw clean org.jacoco:jacoco-maven-plugin:prepare-agent install
+  - ./mvnw heroku:deploy jib:build -P deploy-heroku,deploy-docker
