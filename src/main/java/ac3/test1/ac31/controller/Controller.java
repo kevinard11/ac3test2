@@ -28,8 +28,9 @@ public class Controller {
         return new ResponseEntity<>(name, HttpStatus.OK);
     }
 
-    @GetMapping(value="/")
-    public ResponseEntity<?> welcome(){
-        System.out.println("test");return new ResponseEntity<>("Welcome to ac3test3 project. For testing only", HttpStatus.OK);
+    @GetMapping(value="/{name}")
+    public ResponseEntity<?> welcome(String name){
+        String id = dao.check("name");
+        return new ResponseEntity<>("Welcome to ac3test3 project. For testing only"+ id, HttpStatus.OK);
     }
 }
