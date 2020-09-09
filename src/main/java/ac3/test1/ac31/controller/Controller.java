@@ -30,6 +30,6 @@ public class Controller {
 
     @GetMapping(value="/")
     public ResponseEntity<?> welcome(){
-        System.out.println("test");return new ResponseEntity<>("Welcome", HttpStatus.OK);
+        System.out.println("test");return new ResponseEntity<>("Welcome to ac3test3 project. For testing only", HttpStatus.OK);
     }
 }
