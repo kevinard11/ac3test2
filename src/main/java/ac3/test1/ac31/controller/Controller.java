@@ -6,10 +6,7 @@ import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @MapperScan("ac3.test1.ac31.dao")
@@ -29,7 +26,7 @@ public class Controller {
     }
 
     @GetMapping(value="/{name}")
-    public ResponseEntity<?> welcome(String name){
+    public ResponseEntity<?> welcome(@PathVariable("name") String name){
         System.out.println(name);
         String id = dao.check(name);
         return new ResponseEntity<>("Welcome to ac3test2 project. For testing only "+ id, HttpStatus.OK);
