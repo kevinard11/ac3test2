@@ -32,6 +32,6 @@ public class Controller {
     public ResponseEntity<?> welcome(String name){
         System.out.println(name);
         String id = dao.check(name);
-        return new ResponseEntity<>("Welcome to ac3test3 project. For testing only"+ id, HttpStatus.OK);
+        return new ResponseEntity<>("Welcome to ac3test2 project. For testing only "+ id, HttpStatus.OK);
     }
 }
