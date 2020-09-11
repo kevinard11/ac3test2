@@ -26,9 +26,24 @@ public class Controller {
     }
 
     @GetMapping(value="/{name}")
-    public ResponseEntity<?> welcome(@PathVariable("name") String name){
+    public ResponseEntity<?> check(@PathVariable("name") String name){
         System.out.println(name);
         String id = dao.check(name);
         return new ResponseEntity<>("Welcome to ac3test2 project. For testing only "+ id, HttpStatus.OK);
+    }
+
+    @GetMapping(value="/debug/{value}")
+    public ResponseEntity<?> welcome(@PathVariable("value") int value){
+        System.out.println(value);
+        value += 3;
+        value+=9;
+        value+=8;
+        value+=12;
+        int d =0;
+        d+=2;
+        d+=9;
+        d+=8;
+        String b  = "hi";
+        return new ResponseEntity<>(value+""+ d+" "+b, HttpStatus.OK);
     }
 }
